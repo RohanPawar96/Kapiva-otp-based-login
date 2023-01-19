@@ -11,9 +11,14 @@
   background-color: white;
   border-radius: 50%;
   bottom: -50px;
-  left: 43%;
+  left: 264.567px;
   text-align: center;
   padding: 5px;
+}
+
+.pink {
+  font-size: 24px;
+  color: #c97b5a;
 }
 
 .main {
@@ -52,12 +57,14 @@
   height: auto;
   background-color: white;
   top: 24%;
-  left: 30%;
+  left: 28.5%;
 }
 
 .main .background-box .box .ReactFlagsSelect-module_selectBtn__19wW7 {
   border: 1.5px solid rgba(128, 160, 60, 1);
   height: 62px;
+  width: 90%;
+  margin: 0 5%;
 }
 
 .MuiInputBase-root {

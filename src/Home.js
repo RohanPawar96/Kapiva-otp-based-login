@@ -25,16 +25,17 @@ function Home() {
             style={{
               fontStyle: "normal",
               fontWeight: "600",
-              fontSize: "24px",
-              lineHeight: "120%",
+              fontSize: "18px",
+              lineHeight: "28.8px",
               textAlign: "center",
+              padding: "3% 0",
             }}
           >
-            <>Welcome to Kapiva!</>
+            <span className="pink">Welcome to Kapiva!</span>
             <br /> Enter your mobile number and we will send you an OTP for
             verification.
           </Typography>
-          <Grid width={"100%"} spacing={2} mb={"104px"}>
+          <Grid width={"100%"} spacing={2} mb={"80px"}>
             <Grid xs={12} mt={2}></Grid>
             <Grid xs={12} mt={2}>
               <ReactFlagsSelect
@@ -45,6 +46,8 @@ function Home() {
                   border: "1px solid rgba(128, 160, 60, 1)",
                   backgound: "rgba(255,255,255,0)",
                   height: "62px !important",
+                  width: "90%",
+                  margin: "0 5%",
                 }}
               />
             </Grid>
@@ -52,10 +55,10 @@ function Home() {
               <TextField
                 id="outlined-basic"
                 //   label="Outlined"
-                placeholder="Enter Number"
+                placeholder="Mobile Number"
                 variant="outlined"
-                fullWidth={true}
-                // style={{ border: "1px solid rgba(128, 160, 60, 1)" }}
+                // fullWidth={true}
+                style={{ width: "90%", margin: "0 5%" }}
                 type={"number"}
                 //   onChange={(e) => checkInput(e.target.value)}
                 //   error={error}
