@@ -127,7 +127,7 @@ export default function Home() {
           checkUser();
         })
         .catch((err) => {
-          setError(err);
+          alert("Invalid OTP");
           setLoading(false);
         });
     }

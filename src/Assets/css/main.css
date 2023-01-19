@@ -12,14 +12,28 @@
   border-radius: 50%;
   bottom: -50px;
   left: 43%;
+  text-align: center;
+  padding: 5px;
 }
 
 .main {
+  position: relative;
   /* background-color: aqua; */
   /* position: relative; */
   height: 800px;
   z-index: 0;
   overflow: hidden;
+}
+
+.main .page-heading-otp {
+  position: absolute;
+  width: 100%;
+  top: 5%;
+  text-align: center;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  z-index: 200;
 }
 
 .main .background-box {
@@ -29,16 +43,16 @@
   background-image: url("../Images/image-background-desktop.png");
   background-repeat: no-repeat;
   background-size: contain;
+  top: -10%;
 }
 
 .main .background-box .box {
   position: absolute;
   width: 647px;
-  height: 280px;
+  height: auto;
   background-color: white;
-  top: 25%;
-  left: 28%;
-  padding: 0 4%;
+  top: 24%;
+  left: 30%;
 }
 
 .main .background-box .box .ReactFlagsSelect-module_selectBtn__19wW7 {
@@ -54,5 +68,15 @@
 }
 
 .MuiLoadingButton-root {
-  border-radius: 50%;
+  border-radius: 0 0 50% 50%;
+}
+
+.heading-page {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 120%;
+  /* or 29px */
+
+  text-align: center;
 }

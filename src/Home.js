@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactFlagsSelect from "react-flags-select";
-import { Button, Container, Fade, Grid, TextField } from "@mui/material";
+import {
+  Button,
+  Container,
+  Fade,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import iconRightArrow from "./Assets/Images/icon-right-arrow.png";
 
 function Home() {
-  const [country, setCountry] = React.useState("IN");
+  const [country, setCountry] = useState("IN");
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="main">
+      <p className="page-heading-otp">LOGIN</p>
       <div className="background-box">
         <Container maxWidth={"xl"} className="box">
-          <Grid width={"100%"} spacing={2}>
+          <Typography
+            className="heading-page"
+            style={{
+              fontStyle: "normal",
+              fontWeight: "600",
+              fontSize: "24px",
+              lineHeight: "120%",
+              textAlign: "center",
+            }}
+          >
+            <>Welcome to Kapiva!</>
+            <br /> Enter your mobile number and we will send you an OTP for
+            verification.
+          </Typography>
+          <Grid width={"100%"} spacing={2} mb={"104px"}>
             <Grid xs={12} mt={2}></Grid>
             <Grid xs={12} mt={2}>
               <ReactFlagsSelect
@@ -42,12 +66,27 @@ function Home() {
           <div className="circle">
             <LoadingButton
               variant="contained"
-              loading={true}
+              loading={loading}
+              style={{
+                height: "80px",
+                width: "80px",
+                borderRadius: "50% 50% 50% 50%",
+                bottom: "-8%",
+                backgroundColor: "rgba(128, 160, 60, 1)",
+              }}
               // disabled={mailOTP === "" && mailOTP.length <= 6 ? false : true}
               type="submit"
               // onClick={() => verifyEmailOtp()}
             >
-              Submit OTP
+              {loading === false ? (
+                <img
+                  style={{ zIndex: "99999" }}
+                  src={iconRightArrow}
+                  alt="Sumbit"
+                />
+              ) : (
+                ""
+              )}
             </LoadingButton>
           </div>
         </Container>
