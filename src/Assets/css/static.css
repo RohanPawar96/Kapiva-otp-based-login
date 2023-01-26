@@ -1,0 +1,166 @@
+.bold {
+  font-size: 23.12px;
+  font-weight: 700;
+}
+
+.static-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 10%;
+}
+
+.static-content .kapiva-app-detail {
+  width: 35%;
+  text-align: center;
+  margin-right: 99px;
+  margin-top: 2%;
+}
+
+.static-content .kapiva-app-detail .logo {
+  width: 100%;
+  text-align: center;
+}
+
+.static-content .kapiva-app-detail .logo img {
+  width: 90px;
+  height: 90px;
+}
+
+.static-content .kapiva-app-detail .content p.heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 2%;
+}
+
+.static-content .kapiva-app-detail .content p.description {
+  font-weight: 400;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.static-content .kapiva-app-detail .buttons {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  row-gap: 20px;
+}
+
+.static-content hr {
+  border: 0.1px solid #80a03c;
+  height: 407px;
+}
+
+.static-content .kapiva-app-offers {
+  width: 35%;
+  text-align: center;
+  margin-left: 99px;
+}
+
+.static-content .kapiva-app-offers .heading {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 115%;
+}
+
+.static-content .kapiva-app-offers .description {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  margin-bottom: 29px;
+  margin-top: 10px;
+}
+
+.static-content .kapiva-app-offers .images {
+  display: grid;
+  width: 100%;
+  text-align: center;
+  place-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 40px;
+}
+
+.static-content .kapiva-app-offers .images .card {
+  text-align: center;
+}
+
+.static-content .kapiva-app-offers .images .card p {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 115%;
+}
+
+.static-content .kapiva-app-offers .images .card img {
+  width: 100px;
+  height: 100px;
+}
+
+@media screen and (min-width: 350px) and (max-width: 750px) {
+  .bold {
+    font-size: 16px;
+  }
+
+  .static-content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 0;
+    margin-top: 10%;
+  }
+
+  .static-content .kapiva-app-detail .logo img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .static-content .kapiva-app-detail .content p.heading {
+    font-size: 21px;
+    margin-top: 2%;
+  }
+
+  .static-content .kapiva-app-detail .buttons img {
+    width: 181px;
+    height: 42px;
+  }
+
+  .static-content hr {
+    /* height: 335px; */
+    width: 335px;
+  }
+
+  .static-content .kapiva-app-offers {
+    margin-bottom: 40px;
+  }
+
+  .static-content .kapiva-app-offers .content {
+    width: 90%;
+    margin: 0 5%;
+  }
+
+  .static-content .kapiva-app-offers .content .heading {
+    font-size: 21px;
+  }
+
+  .static-content .kapiva-app-offers .content .description {
+    font-size: 16px;
+  }
+
+  .static-content .kapiva-app-offers .images .card p {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 751px) and (max-width: 1000px) {
+  .static-content .kapiva-app-detail {
+    width: 49%;
+    text-align: center;
+    margin-right: 2%;
+    margin-top: 2%;
+  }
+
+  .static-content .kapiva-app-offers {
+    width: 49%;
+    text-align: center;
+    margin-left: 2%;
+  }
+}

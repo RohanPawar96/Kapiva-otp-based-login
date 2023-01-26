@@ -1,0 +1,44 @@
+.popup-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: auto;
+  background-color: white;
+  border: 1px solid rgba(255, 255, 255, 0);
+  box-shadow: 24px;
+  border-radius: 5px;
+  padding: 5% 5%;
+}
+
+.popup-box h2.popup-title {
+  font-size: 16px;
+}
+
+.popup-box p.popup-desc {
+  font-size: 14px;
+  margin: 5% 0 10%;
+}
+
+@media screen and (min-width: 500px) and (max-width: 800px) {
+  .popup-box {
+    width: 40%;
+  }
+}
+
+@media screen and (min-width: 801px) {
+  .popup-box {
+    width: 20%;
+    padding: 2% 2%;
+  }
+
+  .popup-box h2.popup-title {
+    font-size: 22px;
+  }
+
+  .popup-box p.popup-desc {
+    font-size: 18px;
+    margin: 5% 0 10%;
+  }
+}

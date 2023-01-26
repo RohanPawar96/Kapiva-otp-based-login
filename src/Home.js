@@ -1,100 +1,109 @@
-import React, { useState } from "react";
-import ReactFlagsSelect from "react-flags-select";
-import {
-  Button,
-  Container,
-  Fade,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import iconRightArrow from "./Assets/Images/icon-right-arrow.png";
+import React from "react";
+import { Container } from "@mui/material";
+import OTPForm from "./Container/OTPForm";
 
 function Home() {
-  const [country, setCountry] = useState("IN");
-  const [loading, setLoading] = useState(false);
+  const [mobileOTPScenario, setMobileOTPScenario] = React.useState(false);
+  const [showOtp, setShowOtp] = React.useState(false);
 
   return (
-    <div className="main">
-      <p className="page-heading-otp">LOGIN</p>
-      <div className="background-box">
-        <Container maxWidth={"xl"} className="box">
-          <Typography
-            className="heading-page"
-            style={{
-              fontStyle: "normal",
-              fontWeight: "600",
-              fontSize: "18px",
-              lineHeight: "28.8px",
-              textAlign: "center",
-              padding: "3% 0",
-            }}
-          >
-            <span className="pink">Welcome to Kapiva!</span>
-            <br /> Enter your mobile number and we will send you an OTP for
-            verification.
-          </Typography>
-          <Grid width={"100%"} spacing={2} mb={"80px"}>
-            <Grid xs={12} mt={2}></Grid>
-            <Grid xs={12} mt={2}>
-              <ReactFlagsSelect
-                selected={country}
-                disabled
-                onSelect={(e) => setCountry(e)}
-                style={{
-                  border: "1px solid rgba(128, 160, 60, 1)",
-                  backgound: "rgba(255,255,255,0)",
-                  height: "62px !important",
-                  width: "90%",
-                  margin: "0 5%",
-                }}
+    <>
+      <div className="main">
+        <p className="page-heading-otp">
+          {!mobileOTPScenario
+            ? showOtp === true
+              ? "OTP Verification"
+              : "Login"
+            : showOtp === true
+            ? "OTP Verification"
+            : "SignUp"}
+        </p>
+        <div className="background-box">
+          <Container maxWidth={"xl"} className="box">
+            <center>
+              <OTPForm
+                mobileOTPScenario={mobileOTPScenario}
+                setMobileOTPScenario={setMobileOTPScenario}
+                showOtp={showOtp}
+                setShowOtp={setShowOtp}
               />
-            </Grid>
-            <Grid xs={12} mt={2}>
-              <TextField
-                id="outlined-basic"
-                //   label="Outlined"
-                placeholder="Mobile Number"
-                variant="outlined"
-                // fullWidth={true}
-                style={{ width: "90%", margin: "0 5%" }}
-                type={"number"}
-                //   onChange={(e) => checkInput(e.target.value)}
-                //   error={error}
-                inputProps={{ maxLength: 10, typeof: "number" }}
-              />
-            </Grid>
-          </Grid>
-          <div className="circle">
-            <LoadingButton
-              variant="contained"
-              loading={loading}
-              style={{
-                height: "80px",
-                width: "80px",
-                borderRadius: "50% 50% 50% 50%",
-                bottom: "-8%",
-                backgroundColor: "rgba(128, 160, 60, 1)",
-              }}
-              // disabled={mailOTP === "" && mailOTP.length <= 6 ? false : true}
-              type="submit"
-              // onClick={() => verifyEmailOtp()}
-            >
-              {loading === false ? (
-                <img
-                  style={{ zIndex: "99999" }}
-                  src={iconRightArrow}
-                  alt="Sumbit"
-                />
-              ) : (
-                ""
-              )}
-            </LoadingButton>
-          </div>
-        </Container>
+            </center>
+          </Container>
+        </div>
       </div>
-    </div>
+      <div className="static-content">
+        <div className="kapiva-app-detail">
+          <div className="logo">
+            <img
+              src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/Kapiva-logo.png"
+              alt="logo"
+            />
+          </div>
+          <div className="content">
+            <p className="heading">
+              Kapiva app is <span className="pink">LIVE!</span>
+            </p>
+            <p className="description">
+              Download & Signup, to get <span className="bold">Rs. 200</span>{" "}
+              instant cashback
+            </p>
+          </div>
+          <div className="buttons">
+            <a href="#">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/Mobile-app-store-badge-ios.svg"
+                alt="IOS"
+              />
+            </a>
+            <a href="#">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/Mobile-app-store-badge-android.svg"
+                alt="Android"
+              />
+            </a>
+          </div>
+        </div>
+        <hr />
+        <div className="kapiva-app-offers">
+          <div className="content">
+            <p className="heading">What makes the Kapiva App special?</p>
+            <p className="description">
+              Download the app and avail exclusive offers curated for you.
+            </p>
+          </div>
+          <div className="images">
+            <div className="card">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/img-exclusive-rewards.png"
+                alt="."
+              />
+              <p className="image-name">Exclusive Rewards</p>
+            </div>
+            <div className="card">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/img-faster-checkout.png"
+                alt="."
+              />
+              <p className="image-name">Faster Checkout</p>
+            </div>
+            <div className="card">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/img-instant-tracking.png"
+                alt="."
+              />
+              <p className="image-name">Instant Tracking</p>
+            </div>
+            <div className="card">
+              <img
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/img-easy-navigation.png"
+                alt="."
+              />
+              <p className="image-name">Easy Navigation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

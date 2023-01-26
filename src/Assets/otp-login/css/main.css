@@ -1,0 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "jost", sans-serif;
+}
+
+.circle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-color: white;
+  border-radius: 50%;
+  bottom: -50px;
+  left: 43%;
+  text-align: center;
+  padding: 5px;
+}
+
+p.error {
+  margin: 1% 0 1% 0;
+  color: red;
+  width: 100%;
+  text-align: center;
+}
+
+.pink {
+  color: #c97b5a;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.main {
+  position: relative;
+  /* background-color: aqua; */
+  /* position: relative; */
+  height: 800px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.main .page-heading-otp {
+  position: absolute;
+  width: 100%;
+  top: 5%;
+  text-align: center;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  z-index: 200;
+}
+
+.main .background-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url("../Images/image-background-desktop.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  top: -10%;
+}
+
+.main .background-box .box {
+  position: absolute;
+  width: 647px;
+  height: auto;
+  background-color: white;
+  top: 24%;
+  left: 28.5%;
+  border-radius: 8px;
+  padding-top: 35px;
+}
+
+.main .background-box .box .ReactFlagsSelect-module_selectBtn__19wW7 {
+  border: 1.5px solid rgba(128, 160, 60, 1);
+  height: 62px;
+  width: 90%;
+  margin: 0 5%;
+}
+
+.MuiLoadingButton-root {
+  width: 74px !important;
+  height: 74px !important;
+  border-radius: 100px 100px 100px 100px !important;
+  bottom: -3% !important;
+  background-color: rgba(128, 160, 60, 1);
+}
+
+p.heading-page {
+  font-style: normal;
+  /* font-weight: 600; */
+  font-size: 20px;
+  line-height: 120%;
+  text-align: center !important;
+  padding: 0 4%;
+}
+input[type="text"] {
+  border: 1.5px solid rgba(128, 160, 60, 1);
+  /* height: 62px; */
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 5px;
+}
+
+input[type="email"] {
+  border: 1.5px solid rgba(128, 160, 60, 1);
+  /* height: 62px; */
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 5px;
+}
+
+@media screen and (min-width: 350px) and (max-width: 750px) {
+  .circle {
+    left: 40% !important;
+    bottom: -41px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .main {
+    position: relative;
+    /* background-color: aqua; */
+    /* position: relative; */
+    height: 580px;
+  }
+
+  .main .page-heading-otp {
+    font-size: 24px;
+  }
+
+  .pink {
+    font-size: 19.2px;
+  }
+
+  p.heading-page {
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .main .background-box {
+    background-image: url("../Images/image-background-mobile.png");
+    height: 540px;
+    top: 0%;
+  }
+
+  .main .background-box .box {
+    width: 90%;
+    height: 298px;
+    background-color: white;
+    top: 14%;
+    left: 5%;
+  }
+
+  .main .background-box .box .ReactFlagsSelect-module_selectBtn__19wW7 {
+    height: 42px;
+  }
+
+  .MuiOutlinedInput-root {
+    height: 42px;
+    padding: 8px 0 !important;
+  }
+
+  input[type="number"],
+  input[type="email"] {
+    padding: 11px 14px !important;
+    border: 1.5px solid rgba(128, 160, 60, 1);
+  }
+
+  input[type="text"] {
+    padding: 0 14px !important;
+    height: 48px !important;
+  }
+
+  .MuiBox-root {
+    gap: 8px !important;
+    height: 48px;
+  }
+
+  .MuiInputBase-formControl {
+    /* width: 42px; */
+    height: 48px;
+  }
+
+  .resend-otp-content {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 125%;
+  }
+
+  .resend-otp {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 125%;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .MuiLoadingButton-root {
+    width: 85% !important;
+    height: 85% !important;
+    border-radius: 50% !important;
+    bottom: -7% !important;
+  }
+
+  .MuiLoadingButton-root img {
+    width: 80%;
+  }
+
+  .static-content {
+    display: grid !important;
+    grid-template-columns: repeat(1, 1fr);
+    text-align: center !important;
+    justify-items: center;
+  }
+
+  .static-content .kapiva-app-detail {
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 !important;
+  }
+
+  .static-content hr {
+    height: auto !important ;
+    margin: 5% 0;
+    width: 90%;
+  }
+
+  .static-content .kapiva-app-offers {
+    width: 100% !important;
+    text-align: center;
+    margin-left: 0 !important;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 800px) {
+  .main .background-box {
+    top: -10% !important;
+  }
+
+  .main .background-box .box {
+    /* left: 10%; */
+    top: 25%;
+  }
+}
+
+@media screen and (min-width: 751px) and (max-width: 1000px) {
+  .main .background-box {
+    background-image: url("../Images/image-background-tab.png");
+  }
+
+  .main .background-box .box {
+    width: 60%;
+    top: 25%;
+    left: 20%;
+  }
+
+  .circle {
+    left: 42%;
+  }
+}
