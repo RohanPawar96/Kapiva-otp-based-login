@@ -141,9 +141,9 @@ input[type="email"] {
 }
 
 .css-1x5jdmq {
-  height: 94px !important;
-  width: 88px !important;
   border-radius: 8px;
+  height: 50px !important;
+  width: 88px !important;
 }
 
 .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {

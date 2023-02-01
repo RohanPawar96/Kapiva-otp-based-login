@@ -5,6 +5,7 @@ import OTPForm from "./Container/OTPForm";
 function Home() {
   const [mobileOTPScenario, setMobileOTPScenario] = React.useState(false);
   const [showOtp, setShowOtp] = React.useState(false);
+  const server = "st";
 
   return (
     <>
@@ -26,6 +27,7 @@ function Home() {
                 setMobileOTPScenario={setMobileOTPScenario}
                 showOtp={showOtp}
                 setShowOtp={setShowOtp}
+                server={server}
               />
             </center>
           </Container>
@@ -49,13 +51,13 @@ function Home() {
             </p>
           </div>
           <div className="buttons">
-            <a href="#">
+            <a href="https://kapiva.app.link/2gIK0Lu1Lvb">
               <img
                 src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/Mobile-app-store-badge-ios.svg"
                 alt="IOS"
               />
             </a>
-            <a href="#">
+            <a href="https://kapiva.app.link/2StSfOvfltb">
               <img
                 src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/Mobile-app-store-badge-android.svg"
                 alt="Android"

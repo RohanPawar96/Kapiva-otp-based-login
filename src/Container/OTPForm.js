@@ -21,6 +21,7 @@ const OTPForm = ({
   setMobileOTPScenario,
   setShowOtp,
   showOtp,
+  server,
 }) => {
   const [country, setCountry] = React.useState("IN");
   const [number, setNumber] = React.useState("");
@@ -63,8 +64,10 @@ const OTPForm = ({
       } else {
         setError("Please Enter valid Number");
       }
+    } else if (e.length > 10) {
+      setError("Please Enter 10 digit mobile number");
     } else {
-      setError("Please enter valid number");
+      setError(" ");
     }
   };
 
@@ -97,7 +100,8 @@ const OTPForm = ({
     }
   };
 
-  const submitOtp = () => {
+  const submitOtp = (e) => {
+    e.preventDefault();
     console.log("calling submitOTP");
     // showOtp(true);
     if (number.length === 0) {
@@ -131,7 +135,8 @@ const OTPForm = ({
     }
   };
 
-  const verifyOtp = () => {
+  const verifyOtp = (e) => {
+    e.preventDefault();
     setLoading(true);
     if (otp === "" || otpTrack === "") {
       setError("Please Enter OTP");
@@ -163,7 +168,7 @@ const OTPForm = ({
     axios("https://kapiva.app/api/kapiva_otp_login.php", {
       // axios("http://localhost/test/kapiva_otp_login.php", {
       method: "POST",
-      params: { serve: "st" },
+      params: { serve: `${server}` },
       headers: {
         "Content-Type": "application/json",
         Cookie: "PHPSESSID=8vvm4tuven8d1i9cgv9a6v3rvu",
@@ -186,9 +191,11 @@ const OTPForm = ({
   };
 
   const resgisterUser = (event) => {
-    setLoading(true);
-    console.log(values);
-    var payload = `{
+    event.preventDefault();
+    if (values.fullName !== "" && values.email !== "") {
+      setLoading(true);
+      console.log(values);
+      var payload = `{
       "first_name": "${values.fullName.split(" ")[0]}",
       "last_name": "${values.fullName.split(" ")[1]}",
       "email": "${values.email}",
@@ -196,37 +203,46 @@ const OTPForm = ({
       "device_platform": "${device_platform}"
     }`;
 
-    console.log(payload);
-    axios("https://kapiva.app/api/user_autosignup.php", {
-      method: "POST",
-      params: { p: "create_user", serve: "st" },
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: "PHPSESSID=8vvm4tuven8d1i9cgv9a6v3rvu",
-      },
-      data: payload,
-    })
-      .then((response) => {
-        console.log(response.data);
-        const status = response.data.status;
-        if (status === 200) {
-          checkUser();
-          setLoading(false);
-        } else if (status === 201) {
-          // alert(response.data.message);
-          setMessage(response.data.message);
-          setOpen(true);
-          setLoading(false);
-        }
+      console.log(payload);
+      axios("https://kapiva.app/api/user_autosignup.php", {
+        method: "POST",
+        params: { p: "create_user", serve: `${server}` },
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: "PHPSESSID=8vvm4tuven8d1i9cgv9a6v3rvu",
+        },
+        data: payload,
       })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-    event.preventDefault();
+        .then((response) => {
+          console.log(response.data);
+          const status = response.data.status;
+          if (status === 200) {
+            checkUser();
+            setLoading(false);
+          } else if (status === 201) {
+            // alert(response.data.message);
+            setMessage(response.data.message);
+            setOpen(true);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+      event.preventDefault();
+    } else {
+      if (values.fullName === "") {
+        setNameError("Please enter valid fullname");
+      }
+      if (values.email === "") {
+        setEmailError("Please enter valid email");
+      }
+    }
   };
 
-  const verifyEmailOtp = () => {
+  const verifyEmailOtp = (e) => {
+    e.preventDefault();
     const payload = {
       user_name: values.fullName.split(" ")[0],
       email: values.email,
@@ -239,15 +255,16 @@ const OTPForm = ({
       params: { p: "verify_email_otp" },
       data: payload,
     }).then((response) => {
-      console.log(response.data);
-      const status = response.data.status;
-      if (status === 400) {
+      console.log(response.data.status);
+      if (response.data.status === 400) {
         setEmailOTPError(response.data.message);
-      } else if (status === 200) {
+      } else if (response.data.status === 200) {
         updateUser();
       }
     });
   };
+
+  // console.log(mailOTPError);
 
   const updateUser = () => {
     var payload = `{
@@ -265,7 +282,7 @@ const OTPForm = ({
     console.log(typeof payload);
     axios("https://kapiva.app/api/user_autosignup.php", {
       method: "POST",
-      params: { p: "update_user", serve: "st" },
+      params: { p: "update_user", serve: `${server}` },
       headers: {
         "Content-Type": "application/json",
         Cookie: "PHPSESSID=8vvm4tuven8d1i9cgv9a6v3rvu",
@@ -326,300 +343,316 @@ const OTPForm = ({
           </>
         )}
       </p>
-      <Grid width={"100%"} spacing={2} mb={"80px"}>
-        {mobileOTPScenario === false ? (
-          <>
-            {showOtp === false ? (
-              <>
-                <Grid xs={12} mt={2}>
-                  <ReactFlagsSelect
-                    selected={country}
-                    disabled
-                    onSelect={(e) => setCountry(e)}
-                    // components={{
-                    //   DropdownIndicator: () => null,
-                    //   IndicatorSeparator: () => null,
-                    // }}
-                  />
-                </Grid>
-
-                <Grid xs={12} mt={2}>
-                  <TextField
-                    id="outlined-basic"
-                    //   label="Outlined"
-                    placeholder="Mobile Number"
-                    name="number"
-                    variant="outlined"
-                    style={{
-                      width: "90%",
-                      margin: "0 5%",
-                      padding: "0",
-                      fontFamily: "FontAwesome",
-                      // border: "1.5px solid rgba(128, 160, 60, 1)",
-                      borderRadius: "5px",
-                    }}
-                    type={"number"}
-                    onChange={(e) => checkInput(e.target.value)}
-                    error={error}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-phone.png"
-                            alt=""
-                            width={"30px"}
-                            height={"30px"}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                    inputProps={{
-                      maxLength: 10,
-                    }}
-                  />
-                  <div id="recaptcha-container"></div>
-
-                  {error !== "" ? (
-                    <Fade in={error}>
-                      <p className="error">{error}</p>
-                    </Fade>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid xs={12} mb={"20px"}>
-                  <MuiOtpInput
-                    width={"100%"}
-                    value={otp}
-                    onChange={(e) => {
-                      setOtp(e);
-                      setError("");
-                      setLoading(false);
-                    }}
-                    length={6}
-                    mt={"30px"}
-                    mb={"10px"}
-                    // error={true}
-                    error={error === "" ? true : false}
-                  />
-                  {error !== "" ? (
-                    <Fade in={error}>
-                      <p className="error">{error}</p>
-                    </Fade>
-                  ) : (
-                    ""
-                  )}
-                  <div id="recaptcha-container"></div>
-                </Grid>
-                <Grid
-                  xs={12}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  gap={"2%"}
-                  alignItems={"baseline"}
-                >
-                  <p className="resend-otp-content">Didn’t receive an OTP?</p>
-                  <p className="resend-otp pink" onClick={() => submitOtp()}>
-                    Resend OTP
-                  </p>
-                </Grid>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            {showOtp === false ? (
-              <>
-                <Grid xs={12} mt={2}>
-                  <TextField
-                    id="outlined-basic"
-                    //   label="Outlined"
-                    placeholder="Enter Full Name"
-                    name="fullName"
-                    variant="outlined"
-                    type={"text"}
-                    // fullWidth={true}
-                    style={{
-                      width: "90%",
-                      margin: "0 5%",
-                      padding: "0",
-                      fontFamily: "FontAwesome",
-                      borderRadius: "5px",
-                    }}
-                    onChange={(e) => checkName(e)}
-                    error={nameError !== ""}
-                    inputProps={{ typeof: "text" }}
-                    required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-user.png"
-                            alt=""
-                            width={"30px"}
-                            height={"30px"}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {nameError !== "" ? (
-                    <Fade in={nameError !== ""}>
-                      <p className="error">{nameError}</p>
-                    </Fade>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-
-                <Grid xs={12} mt={2}>
-                  <TextField
-                    id="outlined-basic"
-                    //   label="Outlined"
-                    placeholder="Enter Email"
-                    name="email"
-                    variant="outlined"
-                    type={"email"}
-                    // fullWidth={true}
-                    style={{
-                      width: "90%",
-                      margin: "0 5%",
-                      padding: "0",
-                      fontFamily: "FontAwesome",
-                      borderRadius: "5px",
-                    }}
-                    onChange={(e) => checkEmail(e)}
-                    error={emailError !== ""}
-                    // inputProps={{ maxLength: 10, typeof: "text" }}
-                    required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-mail.png"
-                            width={"30px"}
-                            height={"24px"}
-                            alt=""
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {emailError !== "" ? (
-                    <Fade in={emailError !== ""}>
-                      <p className="error">{emailError}</p>
-                    </Fade>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid xs={12} mb={"20px"}>
-                  <MuiOtpInput
-                    width={"100%"}
-                    value={otp}
-                    onChange={(e) => {
-                      setOtp(e);
-                      setError("");
-                      setLoading(false);
-                    }}
-                    length={6}
-                    mt={"30px"}
-                    mb={"10px"}
-                    // error={true}
-                    error={error === "" ? true : false}
-                  />
-                  {error !== "" ? (
-                    <Fade in={error}>
-                      <p
-                        style={{
-                          margin: "1% 0 1% 0",
-                          color: "red",
-                          width: "100%",
-                          textAlign: "center",
-                        }}
-                      >
-                        {error}
-                      </p>
-                    </Fade>
-                  ) : (
-                    ""
-                  )}
-                  <div id="recaptcha-container"></div>
-                </Grid>
-                <Grid
-                  xs={12}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  gap={"2%"}
-                  alignItems={"baseline"}
-                >
-                  <p className="resend-otp-content">Didn’t receive an OTP?</p>
-                  <p
-                    className="resend-otp pink"
-                    onClick={() =>
-                      mobileOTPScenario === false
-                        ? submitOtp()
-                        : resgisterUser()
-                    }
-                  >
-                    Resend OTP
-                  </p>
-                </Grid>
-              </>
-            )}
-          </>
-        )}
-      </Grid>
-      <div className="circle">
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          style={{
-            bottom: "-8%",
-            backgroundColor: `${
-              error !== "" ? "rgb(0,0,0,0.3)" : "rgba(128, 160, 60, 1)"
-            }`,
-          }}
-          disabled={error !== "" ? true : false}
-          type="submit"
-          onClick={() => {
-            // eslint-disable-next-line no-lone-blocks
-            {
-              // eslint-disable-next-line no-unused-expressions
-
-              if (mobileOTPScenario === false) {
-                if (otpTrack !== "") {
-                  verifyOtp();
-                } else {
-                  submitOtp();
-                }
-              } else {
-                if (otp === "") {
-                  resgisterUser();
-                } else {
-                  verifyEmailOtp();
-                }
-              }
+      <form
+        onSubmit={(e) => {
+          if (mobileOTPScenario === false) {
+            if (otpTrack !== "") {
+              verifyOtp(e);
+            } else {
+              submitOtp(e);
             }
-          }}
-        >
-          {loading === false ? (
-            <img
-              style={{ zIndex: "99999" }}
-              src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-right-arrow.png"
-              alt="Sumbit"
-            />
+          } else {
+            if (otp === "") {
+              resgisterUser(e);
+            } else {
+              verifyEmailOtp(e);
+            }
+          }
+        }}
+      >
+        <Grid width={"100%"} spacing={2} mb={"80px"}>
+          {mobileOTPScenario === false ? (
+            <>
+              {showOtp === false ? (
+                <>
+                  <Grid xs={12} mt={2}>
+                    <ReactFlagsSelect
+                      selected={country}
+                      disabled
+                      onSelect={(e) => setCountry(e)}
+                      // components={{
+                      //   DropdownIndicator: () => null,
+                      //   IndicatorSeparator: () => null,
+                      // }}
+                    />
+                  </Grid>
+
+                  <Grid xs={12} mt={2}>
+                    <TextField
+                      id="outlined-basic"
+                      //   label="Outlined"
+                      placeholder="Mobile Number"
+                      name="number"
+                      variant="outlined"
+                      style={{
+                        width: "90%",
+                        margin: "0 5%",
+                        padding: "0",
+                        fontFamily: "FontAwesome",
+                        // border: "1.5px solid rgba(128, 160, 60, 1)",
+                        borderRadius: "5px",
+                      }}
+                      maxLength={10}
+                      type="tel"
+                      onChange={(e) => checkInput(e.target.value)}
+                      error={error}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <img
+                              src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-phone.png"
+                              alt=""
+                              width={"30px"}
+                              height={"30px"}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <div id="recaptcha-container"></div>
+
+                    {error !== "" ? (
+                      <Fade in={error}>
+                        <p className="error">{error}</p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid xs={12} mb={"20px"}>
+                    <MuiOtpInput
+                      width={"100%"}
+                      value={otp}
+                      onChange={(e) => {
+                        setOtp(e);
+                        setError("");
+                        setLoading(false);
+                      }}
+                      length={6}
+                      mt={"30px"}
+                      mb={"10px"}
+                      // error={true}
+                      error={error === "" ? true : false}
+                    />
+                    {error !== "" ? (
+                      <Fade in={error}>
+                        <p className="error">{error}</p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                    <div id="recaptcha-container"></div>
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    gap={"2%"}
+                    alignItems={"baseline"}
+                  >
+                    <p className="resend-otp-content">Didn’t receive an OTP?</p>
+                    <p className="resend-otp pink" onClick={() => submitOtp()}>
+                      Resend OTP
+                    </p>
+                  </Grid>
+                </>
+              )}
+            </>
           ) : (
-            ""
+            <>
+              {showOtp === false ? (
+                <>
+                  <Grid xs={12} mt={2}>
+                    <TextField
+                      id="outlined-basic"
+                      //   label="Outlined"
+                      placeholder="Enter Full Name"
+                      name="fullName"
+                      variant="outlined"
+                      type={"text"}
+                      // fullWidth={true}
+                      style={{
+                        width: "90%",
+                        margin: "0 5%",
+                        padding: "0",
+                        fontFamily: "FontAwesome",
+                        borderRadius: "5px",
+                      }}
+                      onChange={(e) => checkName(e)}
+                      error={nameError !== ""}
+                      inputProps={{ typeof: "text" }}
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <img
+                              src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-user.png"
+                              alt=""
+                              width={"30px"}
+                              height={"30px"}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    {nameError !== "" ? (
+                      <Fade in={nameError !== ""}>
+                        <p className="error">{nameError}</p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                  </Grid>
+
+                  <Grid xs={12} mt={2}>
+                    <TextField
+                      id="outlined-basic"
+                      //   label="Outlined"
+                      placeholder="Enter Email"
+                      name="email"
+                      variant="outlined"
+                      type={"email"}
+                      // fullWidth={true}
+                      style={{
+                        width: "90%",
+                        margin: "0 5%",
+                        padding: "0",
+                        fontFamily: "FontAwesome",
+                        borderRadius: "5px",
+                      }}
+                      onChange={(e) => checkEmail(e)}
+                      error={emailError !== ""}
+                      // inputProps={{ maxLength: 10, typeof: "text" }}
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <img
+                              src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-mail.png"
+                              width={"30px"}
+                              height={"24px"}
+                              alt=""
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    {emailError !== "" ? (
+                      <Fade in={emailError !== ""}>
+                        <p className="error">{emailError}</p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid xs={12} mb={"20px"}>
+                    <MuiOtpInput
+                      width={"100%"}
+                      value={otp}
+                      onChange={(e) => {
+                        setOtp(e);
+                        setError("");
+                        setEmailError("");
+                        setLoading(false);
+                      }}
+                      length={6}
+                      mt={"30px"}
+                      mb={"10px"}
+                      // error={true}
+                      error={error === "" ? true : false}
+                    />
+                    {mailOTPError !== "" ? (
+                      <Fade in={mailOTPError !== ""}>
+                        <p
+                          style={{
+                            margin: "1% 0 1% 0",
+                            color: "red",
+                            width: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          {mailOTPError}
+                        </p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                    <div id="recaptcha-container"></div>
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    gap={"2%"}
+                    alignItems={"baseline"}
+                  >
+                    <p className="resend-otp-content">Didn’t receive an OTP?</p>
+                    <p
+                      className="resend-otp pink"
+                      onClick={() =>
+                        mobileOTPScenario === false
+                          ? submitOtp()
+                          : resgisterUser()
+                      }
+                    >
+                      Resend OTP
+                    </p>
+                  </Grid>
+                </>
+              )}
+            </>
           )}
-        </LoadingButton>
-      </div>
+        </Grid>
+        <div className="circle">
+          <LoadingButton
+            variant="contained"
+            loading={loading}
+            style={{
+              bottom: "-8%",
+              backgroundColor: `${
+                error !== "" ? "rgb(0,0,0,0.3)" : "rgba(128, 160, 60, 1)"
+              }`,
+            }}
+            disabled={error !== "" || mailOTPError !== "" ? true : false}
+            type="submit"
+            onClick={() => {
+              // eslint-disable-next-line no-lone-blocks
+              {
+                // eslint-disable-next-line no-unused-expressions
+                // if (mobileOTPScenario === false) {
+                //   if (otpTrack !== "") {
+                //     verifyOtp();
+                //   } else {
+                //     submitOtp();
+                //   }
+                // } else {
+                //   if (otp === "") {
+                //     resgisterUser();
+                //   } else {
+                //     verifyEmailOtp();
+                //   }
+                // }
+              }
+            }}
+          >
+            {loading === false ? (
+              <img
+                style={{ zIndex: "99999" }}
+                src="https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/icon-right-arrow.png"
+                alt="Sumbit"
+              />
+            ) : (
+              ""
+            )}
+          </LoadingButton>
+        </div>
+      </form>
     </>
   );
 };
