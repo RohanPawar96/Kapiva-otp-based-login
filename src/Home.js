@@ -1,25 +1,37 @@
 import React from "react";
-import { Container } from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 import OTPForm from "./Container/OTPForm";
 
 function Home() {
   const [mobileOTPScenario, setMobileOTPScenario] = React.useState(false);
   const [showOtp, setShowOtp] = React.useState(false);
+  const [loadingScreen, setLoadingScreen] = React.useState(false);
   const server = "st";
+  const prevPageURL = window.localStorage.getItem("PrevPage");
 
   return (
     <>
+      {loadingScreen ? (
+        <div className="loading-screen">
+          <center>
+            <CircularProgress thickness={5} size={80} />
+          </center>
+        </div>
+      ) : (
+        ""
+      )}
+
       <div className="main">
-        <p className="page-heading-otp">
-          {!mobileOTPScenario
-            ? showOtp === true
-              ? "OTP Verification"
-              : "Login"
-            : showOtp === true
-            ? "OTP Verification"
-            : "SignUp"}
-        </p>
         <div className="background-box">
+          <p className="page-heading-otp">
+            {!mobileOTPScenario
+              ? showOtp === true
+                ? "OTP Verification"
+                : "Login"
+              : showOtp === true
+              ? "OTP Verification"
+              : "Sign Up"}
+          </p>
           <Container maxWidth={"xl"} className="box">
             <center>
               <OTPForm
@@ -28,6 +40,8 @@ function Home() {
                 showOtp={showOtp}
                 setShowOtp={setShowOtp}
                 server={server}
+                setLoadingScreen={setLoadingScreen}
+                prevPageURL={prevPageURL}
               />
             </center>
           </Container>

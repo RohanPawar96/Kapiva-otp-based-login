@@ -1,20 +1,15 @@
 import React from "react";
 import ReactFlagsSelect from "react-flags-select";
-import { MuiOtpInput } from "mui-one-time-password-input";
-import {
-  Grid,
-  TextField,
-  Fade,
-  Button,
-  InputAdornment,
-  rgbToHex,
-} from "@mui/material";
+// import { MuiOtpInput } from "mui-one-time-password-input";
+// import OtpInput from "react-otp-input";
+import OtpInput from "react18-input-otp";
+import { Grid, TextField, Fade, InputAdornment } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { auth, firebase } from "../Assets/js/firebase";
-import iconRightArrow from "../Assets/Images/icon-right-arrow.png";
+// import iconRightArrow from "../Assets/Images/icon-right-arrow.png";
 import axios from "axios";
 import PopUp from "./PopUp";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+// import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const OTPForm = ({
   mobileOTPScenario,
@@ -22,6 +17,8 @@ const OTPForm = ({
   setShowOtp,
   showOtp,
   server,
+  setLoadingScreen,
+  prevPageURL,
 }) => {
   const [country, setCountry] = React.useState("IN");
   const [number, setNumber] = React.useState("");
@@ -32,9 +29,11 @@ const OTPForm = ({
   const [mailOTPError, setEmailOTPError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [otpTrack, setOtptrack] = React.useState("");
+  // eslint-disable-next-line
   const [showForm, setShowForm] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
+  const [showResendOTP, setShowResendOTP] = React.useState(false);
 
   const device_platform = "web";
   const [values, setValues] = React.useState({
@@ -59,13 +58,13 @@ const OTPForm = ({
         if (patternNumber.test(e)) {
           setError("");
         } else {
-          setError("Please Enter valid Number");
+          setError("Please enter valid number");
         }
       } else {
-        setError("Please Enter valid Number");
+        setError("Please enter valid number");
       }
     } else if (e.length > 10) {
-      setError("Please Enter 10 digit mobile number");
+      setError("Please enter 10 digit mobile number");
     } else {
       setError(" ");
     }
@@ -89,7 +88,7 @@ const OTPForm = ({
     console.log(otp);
     // setOtp("");
     if (e.target.value === "") {
-      setNameError("Please Enter Full Name.");
+      setNameError("Please enter full Name.");
     } else if (patternName.test(e.target.value)) {
       console.log("Name", patternName.test(e.target.value));
       setValues({ ...values, [e.target.name]: e.target.value });
@@ -111,7 +110,6 @@ const OTPForm = ({
       let verify = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
         size: "invisible",
         callback: (response) => {
-          console.log(response);
           // reCAPTCHA solved, allow signInWithPhoneNumber.
           // ...
         },
@@ -125,11 +123,18 @@ const OTPForm = ({
           setLoading(false);
           setShowOtp(true);
           setOtptrack(result);
+          window.mobileOTPSent = true;
+          if (e.target.outerText === "Resend OTP") {
+            // console.log("resend");
+            setShowResendOTP(true);
+            window.resendMobileOTP = true;
+          }
           // console.log("code sent");
         })
         .catch((err) => {
           alert(err);
           setError(err);
+          window.mobileOTPSent = false;
           window.location.reload();
         });
     }
@@ -146,7 +151,8 @@ const OTPForm = ({
       otpTrack
         .confirm(otp)
         .then((result) => {
-          console.log("success", result);
+          // console.log("success", result);
+          window.mobileOTPVerify = true;
           setLoading(false);
           setError("");
           setOtp("");
@@ -155,6 +161,7 @@ const OTPForm = ({
         })
         .catch((err) => {
           setOtp("");
+          window.mobileOTPVerify = false;
           setError("Invalid OTP");
           setLoading(false);
         });
@@ -163,7 +170,8 @@ const OTPForm = ({
 
   const checkUser = () => {
     const data = `{
-        "mobile": "${number}"
+        "mobile": "${number}",
+        "prevpage": "${prevPageURL}"
     }`;
     axios("https://kapiva.app/api/kapiva_otp_login.php", {
       // axios("http://localhost/test/kapiva_otp_login.php", {
@@ -175,11 +183,8 @@ const OTPForm = ({
       },
       data: data,
     }).then((resp) => {
-      // console.log("Response", resp);
-      // const status = resp.data;
-      console.log(resp.data);
       if (resp.data.status === 200) {
-        console.log(resp.data.data);
+        setLoadingScreen(true);
         window.location.href = resp.data.data;
       } else if (resp.data.status === 400) {
         setMobileOTPScenario(true);
@@ -197,7 +202,11 @@ const OTPForm = ({
       console.log(values);
       var payload = `{
       "first_name": "${values.fullName.split(" ")[0]}",
-      "last_name": "${values.fullName.split(" ")[1]}",
+      "last_name": "${
+        values.fullName.split(" ")[1] === ""
+          ? " "
+          : values.fullName.split(" ")[1]
+      }",
       "email": "${values.email}",
       "mobile": "${number}",
       "device_platform": "${device_platform}"
@@ -241,6 +250,36 @@ const OTPForm = ({
     }
   };
 
+  const verifyEmail = (e) => {
+    axios
+      .get(
+        `https://kapiva.app/api/verify_email.php?device_platform=${device_platform}&email=${
+          values.email
+        }&mobile=${number}&user_name=${values.fullName.split(" ")[0]}`
+      )
+      // .get(
+      //   `https://kapiva.app/api/verify_email.php?device_platform=${device_platform}&email=pawarrohan030@gmail.com&mobile=9845178656&user_name=Santosh`
+      // )
+      .then((response) => {
+        console.log(response);
+        // const status = response.data.status;
+        setOpen(false);
+        setShowOtp(true);
+        window.emailOTPSent = true;
+        if (e.target.outerText === "Resend OTP") {
+          console.log("resend");
+          setShowResendOTP(true);
+          window.emailOTPResend = true;
+        }
+
+        // if (status === 400) {
+        //   alert(response.data.message);
+        // } else {
+        //   alert(response.data.message);
+        // }
+      });
+  };
+
   const verifyEmailOtp = (e) => {
     e.preventDefault();
     const payload = {
@@ -257,8 +296,10 @@ const OTPForm = ({
     }).then((response) => {
       console.log(response.data.status);
       if (response.data.status === 400) {
+        window.emailOTPVerify = false;
         setEmailOTPError(response.data.message);
       } else if (response.data.status === 200) {
+        window.emailOTPVerify = true;
         updateUser();
       }
     });
@@ -295,6 +336,11 @@ const OTPForm = ({
       } else alert(response.data.message);
     });
   };
+
+  const handleOTPChange = (e) => {
+    setOtp(e);
+  };
+
   return (
     <>
       <PopUp
@@ -305,6 +351,7 @@ const OTPForm = ({
         number={number}
         setShowOtp={setShowOtp}
         device_platform={device_platform}
+        setShowResendOTP={setShowResendOTP}
       />
       <p className="heading-page">
         {mobileOTPScenario === false ? (
@@ -360,7 +407,7 @@ const OTPForm = ({
           }
         }}
       >
-        <Grid width={"100%"} spacing={2} mb={"80px"}>
+        <Grid width={"100%"} spacing={2} className="formHeight">
           {mobileOTPScenario === false ? (
             <>
               {showOtp === false ? (
@@ -370,6 +417,7 @@ const OTPForm = ({
                       selected={country}
                       disabled
                       onSelect={(e) => setCountry(e)}
+                      style={{ padding: "0px 10px" }}
                       // components={{
                       //   DropdownIndicator: () => null,
                       //   IndicatorSeparator: () => null,
@@ -384,18 +432,20 @@ const OTPForm = ({
                       placeholder="Mobile Number"
                       name="number"
                       variant="outlined"
+                      autoFocus
                       style={{
                         width: "90%",
                         margin: "0 5%",
                         padding: "0",
                         fontFamily: "FontAwesome",
+                        height: "62px",
                         // border: "1.5px solid rgba(128, 160, 60, 1)",
                         borderRadius: "5px",
                       }}
-                      maxLength={10}
-                      type="tel"
+                      type="number"
                       onChange={(e) => checkInput(e.target.value)}
                       error={error}
+                      maxLength={10}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -407,6 +457,8 @@ const OTPForm = ({
                             />
                           </InputAdornment>
                         ),
+                        inputProps: {},
+                        style: { fontFamily: "Jost" },
                       }}
                     />
                     <div id="recaptcha-container"></div>
@@ -422,24 +474,72 @@ const OTPForm = ({
                 </>
               ) : (
                 <>
-                  <Grid xs={12} mb={"20px"}>
-                    <MuiOtpInput
+                  <Grid xs={12}>
+                    <OtpInput
+                      value={otp}
+                      onChange={(e) => {
+                        handleOTPChange(e);
+                        setError("");
+                        setLoading(false);
+                        setShowResendOTP(false);
+                      }}
+                      numInputs={6}
+                      shouldAutoFocus={true}
+                      containerStyle={"otp-box"}
+                      // separator={<span> </span>}
+                      isInputNum={true}
+                      inputStyle={"otp-field"}
+                      errorStyle={"otp-error"}
+                      hasErrored={error}
+                      autoComplete={true}
+                    />
+                    {/* <OtpInput
                       width={"100%"}
                       value={otp}
                       onChange={(e) => {
-                        setOtp(e);
+                        handleOTPChange(e);
                         setError("");
                         setLoading(false);
+                        setShowResendOTP(false);
                       }}
+                      autoComplete="one-time-code"
+                      // TextFieldsProps={{
+                      //   placeholder: "-",
+                      //   type: "number",
+                      //   InputProps: {
+                      //     inputProps: { style: { fontFamily: "Jost" } },
+                      //   },
+                      // }}
                       length={6}
                       mt={"30px"}
                       mb={"10px"}
                       // error={true}
                       error={error === "" ? true : false}
-                    />
-                    {error !== "" ? (
+                    /> */}
+                    {error !== "" && !showResendOTP ? (
                       <Fade in={error}>
-                        <p className="error">{error}</p>
+                        <p
+                          className="error"
+                          style={{ position: "relative", textAlign: "center" }}
+                        >
+                          {error}
+                        </p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                    {showResendOTP ? (
+                      <Fade in={showResendOTP}>
+                        <p
+                          className="error"
+                          style={{
+                            position: "relative",
+                            textAlign: "Center",
+                            color: "black",
+                          }}
+                        >
+                          OTP resent successfully
+                        </p>
                       </Fade>
                     ) : (
                       ""
@@ -454,7 +554,10 @@ const OTPForm = ({
                     alignItems={"baseline"}
                   >
                     <p className="resend-otp-content">Didn’t receive an OTP?</p>
-                    <p className="resend-otp pink" onClick={() => submitOtp()}>
+                    <p
+                      className="resend-otp pink"
+                      onClick={(e) => submitOtp(e)}
+                    >
                       Resend OTP
                     </p>
                   </Grid>
@@ -465,13 +568,14 @@ const OTPForm = ({
             <>
               {showOtp === false ? (
                 <>
-                  <Grid xs={12} mt={2}>
+                  <Grid xs={12}>
                     <TextField
                       id="outlined-basic"
                       //   label="Outlined"
                       placeholder="Enter Full Name"
                       name="fullName"
                       variant="outlined"
+                      autoFocus
                       type={"text"}
                       // fullWidth={true}
                       style={{
@@ -480,6 +584,7 @@ const OTPForm = ({
                         padding: "0",
                         fontFamily: "FontAwesome",
                         borderRadius: "5px",
+                        height: "62px",
                       }}
                       onChange={(e) => checkName(e)}
                       error={nameError !== ""}
@@ -496,11 +601,14 @@ const OTPForm = ({
                             />
                           </InputAdornment>
                         ),
+                        inputProps: { style: { fontFamily: "Jost" } },
                       }}
                     />
                     {nameError !== "" ? (
                       <Fade in={nameError !== ""}>
-                        <p className="error">{nameError}</p>
+                        <p className="error" style={{ position: "relative" }}>
+                          {nameError}
+                        </p>
                       </Fade>
                     ) : (
                       ""
@@ -538,10 +646,14 @@ const OTPForm = ({
                             />
                           </InputAdornment>
                         ),
+                        inputProps: { style: { fontFamily: "Jost" } },
                       }}
                     />
                     {emailError !== "" ? (
-                      <Fade in={emailError !== ""}>
+                      <Fade
+                        in={emailError !== ""}
+                        style={{ position: "relative" }}
+                      >
                         <p className="error">{emailError}</p>
                       </Fade>
                     ) : (
@@ -551,8 +663,27 @@ const OTPForm = ({
                 </>
               ) : (
                 <>
-                  <Grid xs={12} mb={"20px"}>
-                    <MuiOtpInput
+                  <Grid xs={12}>
+                    <OtpInput
+                      value={otp}
+                      onChange={(e) => {
+                        handleOTPChange(e);
+                        setError("");
+                        setEmailError("");
+                        setLoading(false);
+                        setShowResendOTP(false);
+                      }}
+                      numInputs={6}
+                      shouldAutoFocus={true}
+                      containerStyle={"otp-box"}
+                      // separator={<span> </span>}
+                      isInputNum={true}
+                      inputStyle={"otp-field"}
+                      errorStyle={"otp-error"}
+                      hasErrored={mailOTPError !== ""}
+                      autoComplete={true}
+                    />
+                    {/* <MuiOtpInput
                       width={"100%"}
                       value={otp}
                       onChange={(e) => {
@@ -560,24 +691,40 @@ const OTPForm = ({
                         setError("");
                         setEmailError("");
                         setLoading(false);
+                        setShowResendOTP(false);
+                      }}
+                      TextFieldsProps={{
+                        placeholder: "-",
+                        InputProps: {
+                          inputProps: { style: { fontFamily: "Jost" } },
+                        },
                       }}
                       length={6}
                       mt={"30px"}
                       mb={"10px"}
                       // error={true}
                       error={error === "" ? true : false}
-                    />
-                    {mailOTPError !== "" ? (
+                    /> */}
+                    {mailOTPError !== "" && !showResendOTP ? (
                       <Fade in={mailOTPError !== ""}>
+                        <p className="error" style={{ position: "relative" }}>
+                          {mailOTPError}
+                        </p>
+                      </Fade>
+                    ) : (
+                      ""
+                    )}
+                    {showResendOTP ? (
+                      <Fade in={showResendOTP}>
                         <p
+                          className="error"
                           style={{
-                            margin: "1% 0 1% 0",
-                            color: "red",
-                            width: "100%",
-                            textAlign: "center",
+                            position: "relative",
+                            color: "black",
+                            textAlign: "Center",
                           }}
                         >
-                          {mailOTPError}
+                          OTP resend successfully
                         </p>
                       </Fade>
                     ) : (
@@ -595,10 +742,10 @@ const OTPForm = ({
                     <p className="resend-otp-content">Didn’t receive an OTP?</p>
                     <p
                       className="resend-otp pink"
-                      onClick={() =>
+                      onClick={(e) =>
                         mobileOTPScenario === false
-                          ? submitOtp()
-                          : resgisterUser()
+                          ? submitOtp(e)
+                          : verifyEmail(e)
                       }
                     >
                       Resend OTP

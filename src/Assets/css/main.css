@@ -4,20 +4,34 @@
   font-family: "jost", sans-serif;
 }
 
+.loading-screen {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding-top: 20%;
+}
+
 .circle {
-  position: absolute;
+  position: relative;
   width: 100px;
   height: 100px;
   background-color: white;
   border-radius: 50%;
-  bottom: -50px;
+  bottom: -96px;
   text-align: center;
   padding: 5px;
-  left: 42%;
 }
 
 .ReactFlagsSelect-module_selectBtn__19wW7::after {
   display: none !important;
+}
+
+.formHeight {
+  height: 62px !important;
 }
 
 input::-webkit-outer-spin-button,
@@ -40,7 +54,10 @@ p.error {
   margin: 1% 0 1% 0;
   color: red;
   width: 100%;
-  text-align: center;
+  text-align: left;
+  font-size: 14px;
+  padding-left: 2.4%;
+  position: absolute;
 }
 
 .pink {
@@ -53,13 +70,36 @@ input[type="text"]::placeholder {
   background-image: url("../Images/icon-right-arrow.png");
   background-size: 100%;
 }
+
+input.otp-field {
+  width: 94px !important;
+  height: 88px;
+  border: 1px solid #80a03c;
+  border-radius: 5px;
+}
+
+.otp-box {
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.otp-error {
+  border: 1px solid red !important;
+}
+
+.otp-focus {
+  border: 2px solid !important;
+}
+
 .main {
   position: relative;
   /* background-color: aqua; */
   /* position: relative; */
-  height: 800px;
+  height: 540px;
   z-index: 0;
   overflow: hidden;
+  margin-bottom: 62px;
 }
 
 .MuiOutlinedInput-notchedOutline {
@@ -67,9 +107,9 @@ input[type="text"]::placeholder {
 }
 
 .main .page-heading-otp {
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
-  top: 5%;
+  margin-bottom: 2%;
   text-align: center;
   font-style: normal;
   font-weight: 600;
@@ -78,24 +118,22 @@ input[type="text"]::placeholder {
 }
 
 .main .background-box {
-  position: relative;
+  /* position: relative; */
   width: 100%;
   height: 100%;
   background-image: url("https://store-5h8rqg02f8.mybigcommerce.com/content/otp-login/Images/image-background-desktop.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  top: -20%;
+  padding-top: 2%;
 }
 
 .main .background-box .box {
-  position: relative;
   width: 647px;
-  height: 365px;
+  height: 318px;
   background-color: white;
-  top: calc(365px - 96px);
   /* left: 30%; */
   border-radius: 8px;
-  padding-top: 35px;
+  padding-top: 20px;
   padding-left: 1% !important;
   padding-right: 1% !important;
 }
@@ -187,12 +225,30 @@ body {
 }
 
 @media screen and (min-width: 350px) and (max-width: 750px) {
+  .loading-screen {
+    padding-top: 100%;
+  }
+
+  input.otp-field {
+    width: 42px !important;
+    height: 48px;
+    /* row-gap: 8px; */
+  }
+
+  .otp-box {
+    justify-content: space-around;
+  }
+
+  .formHeight {
+    height: 57px !important;
+  }
+
   .circle {
-    bottom: -41px;
+    bottom: -53px;
     height: 80px;
-    left: 39% !important;
     width: 80px;
     padding: 0;
+    margin-top: 1%;
   }
 
   .css-1x5jdmq {
@@ -202,6 +258,11 @@ body {
 
   .MuiOtpInput-Box {
     height: 52px !important;
+  }
+
+  p.error {
+    font-size: 10px;
+    width: 35%;
   }
 
   .main {
@@ -234,9 +295,10 @@ body {
 
   .main .background-box .box {
     width: 90%;
-    height: 298px;
+    height: 246px;
     background-color: white;
     top: 10%;
+    padding-top: 4%;
   }
 
   .main .background-box .box .ReactFlagsSelect-module_selectBtn__19wW7 {
@@ -251,7 +313,7 @@ body {
 
   input[type="number"],
   input[type="email"] {
-    padding: 11px 0 !important;
+    padding: 0 0 !important;
   }
 
   .MuiBox-root {
@@ -325,14 +387,8 @@ body {
     top: 25%;
   }
 
-  .circle {
-    left: 42%;
-  }
-}
-
-@media screen and (min-width: 901px) and (max-width: 1050px) {
-  .circle {
-    left: 37.5%;
+  p.heading-page {
+    margin-bottom: 0px;
   }
 }
 

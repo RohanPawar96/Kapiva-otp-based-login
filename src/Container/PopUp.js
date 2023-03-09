@@ -12,10 +12,11 @@ export default function PopUp({
   number,
   setShowOtp,
   device_platform,
+  setShowResendOTP,
 }) {
   const handleClose = () => setOpen(false);
 
-  const verifyEmail = () => {
+  const verifyEmail = (e) => {
     axios
       .get(
         `https://kapiva.app/api/verify_email.php?device_platform=${device_platform}&email=${
@@ -30,6 +31,10 @@ export default function PopUp({
         // const status = response.data.status;
         setOpen(false);
         setShowOtp(true);
+        if (e.target.outerText === "Resend OTP") {
+          console.log("resend");
+          setShowResendOTP(true);
+        }
 
         // if (status === 400) {
         //   alert(response.data.message);

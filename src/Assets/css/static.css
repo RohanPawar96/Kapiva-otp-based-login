@@ -7,7 +7,6 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: 10%;
 }
 
 .static-content .kapiva-app-detail {
@@ -46,7 +45,7 @@
 }
 
 .static-content hr {
-  border: 0.1px solid #80a03c;
+  border: 0.05px solid rgba(128, 160, 60, 0.25);
   height: 407px;
 }
 
